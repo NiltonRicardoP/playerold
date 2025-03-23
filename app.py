@@ -36,3 +36,7 @@ def stream(path):
 
     except Exception as e:
         return f"Erro ao acessar rádio: {e}", 500
+
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))  # Render define a porta pela env PORT
+    app.run(host='0.0.0.0', port=port)
