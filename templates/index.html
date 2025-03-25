@@ -6,7 +6,249 @@
   <title>Rádio Pscorock</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    :root {
+      --primary: #8a2be2;
+      --accent: #ff0044;
+      --dark: #1a0315;
+      --darker: #0d0109;
+      --light: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #666666;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(145deg, var(--dark), #3d0a35, #000000);
+      color: var(--light);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 100vh;
+      text-align: center;
+      padding: 20px;
+      background-attachment: fixed;
+    }
+
+    .on-air-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 20px 0;
+    }
+
+    .on-air {
+      color: var(--accent);
+      font-weight: bold;
+      border: 1px solid var(--accent);
+      padding: 5px 15px;
+      border-radius: 5px;
+      font-size: 14px;
+      letter-spacing: 1px;
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      max-width: 500px;
+      width: 100%;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .logo-container {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 30px;
+    }
+
+    .logo {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+    }
+
+    .glow-effect {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      top: -5px;
+      left: -5px;
+      width: calc(100% + 10px);
+      height: calc(100% + 10px);
+      opacity: 0.6;
+      animation: pulse 2s infinite;
+    }
+
+    .title {
+      font-size: 32px;
+      font-weight: 900;
+      margin-bottom: 10px;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px var(--primary);
+    }
+
+    .subtitle-container {
+      margin-bottom: 40px;
+    }
+
+    .subtitle {
+      color: var(--text-secondary);
+      font-size: 16px;
+      font-style: italic;
+      line-height: 1.4;
+    }
+
+    .player-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .play-button {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: none;
+      background-color: var(--primary);
+      color: var(--light);
+      font-size: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .play-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .play-button.playing {
+      background-color: var(--accent);
+    }
+
+    .status-text {
+      margin-top: 15px;
+      font-size: 16px;
+      color: var(--text-secondary);
+    }
+
+    .equalizer-container {
+      display: flex;
+      align-items: flex-end;
+      height: 30px;
+      margin-top: 20px;
+    }
+
+    .equalizer-container.hidden {
+      display: none;
+    }
+
+    .equalizer-bar {
+      width: 5px;
+      height: 20px;
+      background-color: var(--primary);
+      margin: 0 3px;
+      border-radius: 5px;
+      animation: equalize 1s infinite alternate;
+    }
+
+    .equalizer-bar:nth-child(1) { animation-delay: 0.0s; }
+    .equalizer-bar:nth-child(2) { animation-delay: 0.2s; }
+    .equalizer-bar:nth-child(3) { animation-delay: 0.4s; }
+    .equalizer-bar:nth-child(4) { animation-delay: 0.6s; }
+    .equalizer-bar:nth-child(5) { animation-delay: 0.8s; }
+
+    .footer {
+      padding: 20px;
+      color: var(--text-muted);
+      font-size: 12px;
+      width: 100%;
+      text-align: center;
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 0.4;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 0.6;
+      }
+    }
+
+    @keyframes equalize {
+      0% {
+        height: 5px;
+      }
+      100% {
+        height: 20px;
+      }
+    }
+
+    /* Responsive styles */
+    @media (max-width: 600px) {
+      .container {
+        padding: 30px 20px;
+      }
+      
+      .logo-container {
+        width: 150px;
+        height: 150px;
+        margin-bottom: 20px;
+      }
+      
+      .title {
+        font-size: 28px;
+      }
+      
+      .subtitle {
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .logo-container {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .title {
+        font-size: 24px;
+      }
+      
+      .play-button {
+        width: 60px;
+        height: 60px;
+        font-size: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="on-air-container">
@@ -51,6 +293,80 @@
     <p>Música sem limites</p>
   </div>
 
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const audioPlayer = document.getElementById('audioPlayer');
+      const playButton = document.getElementById('playButton');
+      const statusText = document.getElementById('statusText');
+      const equalizer = document.getElementById('equalizer');
+      
+      let isPlaying = false;
+      let isLoading = false;
+      
+      playButton.addEventListener('click', togglePlay);
+      
+      function togglePlay() {
+        if (isLoading) return;
+        
+        if (!isPlaying) {
+          // Start playing
+          isLoading = true;
+          statusText.textContent = 'Carregando...';
+          
+          audioPlayer.play().then(() => {
+            isPlaying = true;
+            isLoading = false;
+            playButton.innerHTML = '<i class="fas fa-stop"></i>';
+            playButton.classList.add('playing');
+            statusText.textContent = 'Tocando agora';
+            equalizer.classList.remove('hidden');
+            console.log('✅ Rádio está tocando!');
+          }).catch(error => {
+            isLoading = false;
+            console.error('❌ Erro ao tocar rádio:', error);
+            statusText.textContent = 'Erro ao carregar áudio';
+            alert('Não foi possível tocar a rádio. Verifique a conexão ou o link do stream.');
+          });
+        } else {
+          // Stop playing
+          audioPlayer.pause();
+          audioPlayer.currentTime = 0;
+          isPlaying = false;
+          playButton.innerHTML = '<i class="fas fa-play"></i>';
+          playButton.classList.remove('playing');
+          statusText.textContent = 'Pressione play';
+          equalizer.classList.add('hidden');
+          console.log('✅ Rádio parada');
+        }
+      }
+      
+      // Make equalizer bars animate randomly
+      const equalizerBars = document.querySelectorAll('.equalizer-bar');
+      
+      function animateEqualizer() {
+        if (isPlaying) {
+          equalizerBars.forEach(bar => {
+            const height = 5 + Math.random() * 15;
+            bar.style.height = `${height}px`;
+          });
+        }
+        
+        requestAnimationFrame(animateEqualizer);
+      }
+      
+      animateEqualizer();
+      
+      // Handle audio errors
+      audioPlayer.addEventListener('error', function() {
+        isPlaying = false;
+        isLoading = false;
+        playButton.innerHTML = '<i class="fas fa-play"></i>';
+        playButton.classList.remove('playing');
+        statusText.textContent = 'Erro no áudio';
+        equalizer.classList.add('hidden');
+        console.error('❌ Erro no elemento de áudio');
+      });
+    });
+  </script>
 </body>
 </html>
