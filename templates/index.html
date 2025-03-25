@@ -3,71 +3,54 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rádio Online</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Roboto', sans-serif;
-      background: linear-gradient(145deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
-    }
-
-    .container {
-      background-color: #1e2a38;
-      padding: 40px;
-      border-radius: 16px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
-      max-width: 400px;
-      width: 90%;
-    }
-
-    h1 {
-      font-size: 2em;
-      margin-bottom: 20px;
-    }
-
-    audio {
-      width: 100%;
-      outline: none;
-    }
-
-    .logo {
-      width: 120px;
-      height: 120px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .footer {
-      margin-top: 30px;
-      font-size: 0.85em;
-      opacity: 0.6;
-    }
-
-    @media (max-width: 480px) {
-      h1 {
-        font-size: 1.5em;
-      }
-    }
-  </style>
+  <title>Rádio Pscorock</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
-  <div class="container">
-    <img src="https://cdn-icons-png.flaticon.com/512/727/727240.png" alt="Rádio Logo" class="logo">
-    <h1>♫ Rádio Web Online</h1>
-    <audio controls autoplay>
-        <source src="https://radio-proxy-python-production.up.railway.app/stream" type="audio/mpeg">
-        Seu navegador não suporta áudio.
-      </audio>
-    <div class="footer">Transmissão via proxy seguro</div>
+  <div class="on-air-container">
+    <div class="on-air">ON AIR</div>
   </div>
+
+  <div class="container">
+    <div class="logo-container">
+      <img src="https://cdn-icons-png.flaticon.com/512/727/727240.png" alt="Rádio Pscorock Logo" class="logo">
+      <div class="glow-effect"></div>
+    </div>
+    
+    <h1 class="title">RÁDIO PSCOROCK</h1>
+    <div class="subtitle-container">
+      <p class="subtitle">Você está ouvindo... Rádio Psicorock!</p>
+      <p class="subtitle">Onde a mente encontra o som.</p>
+    </div>
+    
+    <div class="player-container">
+      <button id="playButton" class="play-button">
+        <i class="fas fa-play"></i>
+      </button>
+      <div id="statusText" class="status-text">Pressione play</div>
+      
+      <div id="equalizer" class="equalizer-container hidden">
+        <div class="equalizer-bar"></div>
+        <div class="equalizer-bar"></div>
+        <div class="equalizer-bar"></div>
+        <div class="equalizer-bar"></div>
+        <div class="equalizer-bar"></div>
+      </div>
+    </div>
+    
+    <!-- Hidden audio element -->
+    <audio id="audioPlayer">
+      <source src="https://radio-proxy-python-production.up.railway.app/stream" type="audio/mpeg">
+      Seu navegador não suporta áudio.
+    </audio>
+  </div>
+  
+  <div class="footer">
+    <p>Música sem limites</p>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
