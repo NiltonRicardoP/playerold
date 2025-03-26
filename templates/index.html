@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -173,11 +174,25 @@
       animation: equalize 1s infinite alternate;
     }
 
-    .equalizer-bar:nth-child(1) { animation-delay: 0.0s; }
-    .equalizer-bar:nth-child(2) { animation-delay: 0.2s; }
-    .equalizer-bar:nth-child(3) { animation-delay: 0.4s; }
-    .equalizer-bar:nth-child(4) { animation-delay: 0.6s; }
-    .equalizer-bar:nth-child(5) { animation-delay: 0.8s; }
+    .equalizer-bar:nth-child(1) {
+      animation-delay: 0.0s;
+    }
+
+    .equalizer-bar:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .equalizer-bar:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    .equalizer-bar:nth-child(4) {
+      animation-delay: 0.6s;
+    }
+
+    .equalizer-bar:nth-child(5) {
+      animation-delay: 0.8s;
+    }
 
     .footer {
       padding: 20px;
@@ -192,10 +207,12 @@
         transform: scale(1);
         opacity: 0.6;
       }
+
       50% {
         transform: scale(1.05);
         opacity: 0.4;
       }
+
       100% {
         transform: scale(1);
         opacity: 0.6;
@@ -206,6 +223,7 @@
       0% {
         height: 5px;
       }
+
       100% {
         height: 20px;
       }
@@ -216,17 +234,17 @@
       .container {
         padding: 30px 20px;
       }
-      
+
       .logo-container {
         width: 150px;
         height: 150px;
         margin-bottom: 20px;
       }
-      
+
       .title {
         font-size: 28px;
       }
-      
+
       .subtitle {
         font-size: 14px;
       }
@@ -237,11 +255,11 @@
         width: 120px;
         height: 120px;
       }
-      
+
       .title {
         font-size: 24px;
       }
-      
+
       .play-button {
         width: 60px;
         height: 60px;
@@ -250,6 +268,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="on-air-container">
     <div class="on-air">ON AIR</div>
@@ -261,19 +280,20 @@
       <img src="/static/Logo.webp" alt="Rádio Pscorock Logo" class="logo">
       <div class="glow-effect"></div>
     </div>
-    
+
     <h1 class="title">RÁDIO PSCOROCK</h1>
     <div class="subtitle-container">
       <p class="subtitle">Você está ouvindo... Rádio Pscorock!</p>
       <p class="subtitle">Onde a mente encontra o som.</p>
     </div>
-    
+
     <div class="player-container">
       <button id="playButton" class="play-button">
         <i class="fas fa-play"></i>
       </button>
       <div id="statusText" class="status-text">Pressione play</div>
-      
+      <div id="currentSong" class="status-text" style="font-style: italic;"></div>
+
       <div id="equalizer" class="equalizer-container hidden">
         <div class="equalizer-bar"></div>
         <div class="equalizer-bar"></div>
@@ -282,38 +302,38 @@
         <div class="equalizer-bar"></div>
       </div>
     </div>
-    
+
     <!-- Hidden audio element -->
     <audio id="audioPlayer">
       <source src="https://radio-proxy-python-production.up.railway.app/stream" type="audio/mpeg">
       Seu navegador não suporta áudio.
     </audio>
   </div>
-  
+
   <div class="footer">
     <p>Música sem limites</p>
   </div>
 
   <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       const audioPlayer = document.getElementById('audioPlayer');
       const playButton = document.getElementById('playButton');
       const statusText = document.getElementById('statusText');
       const equalizer = document.getElementById('equalizer');
-      
+
       let isPlaying = false;
       let isLoading = false;
-      
+
       playButton.addEventListener('click', togglePlay);
-      
+
       function togglePlay() {
         if (isLoading) return;
-        
+
         if (!isPlaying) {
           // Start playing
           isLoading = true;
           statusText.textContent = 'Carregando...';
-          
+
           audioPlayer.play().then(() => {
             isPlaying = true;
             isLoading = false;
@@ -340,10 +360,10 @@
           console.log('✅ Rádio parada');
         }
       }
-      
+
       // Make equalizer bars animate randomly
       const equalizerBars = document.querySelectorAll('.equalizer-bar');
-      
+
       function animateEqualizer() {
         if (isPlaying) {
           equalizerBars.forEach(bar => {
@@ -351,14 +371,14 @@
             bar.style.height = `${height}px`;
           });
         }
-        
+
         requestAnimationFrame(animateEqualizer);
       }
-      
+
       animateEqualizer();
-      
+
       // Handle audio errors
-      audioPlayer.addEventListener('error', function() {
+      audioPlayer.addEventListener('error', function () {
         isPlaying = false;
         isLoading = false;
         playButton.innerHTML = '<i class="fas fa-play"></i>';
@@ -368,6 +388,29 @@
         console.error('❌ Erro no elemento de áudio');
       });
     });
+    const currentSongText = document.getElementById('currentSong');
+
+    function fetchCurrentSong() {
+      fetch('https://radio-proxy-python-production.up.railway.app/currentsong')
+        .then(res => res.json())
+        .then(data => {
+          if (data.current_song) {
+            currentSongText.textContent = `🎵 ${data.current_song}`;
+          } else {
+            currentSongText.textContent = '🎵 Música indisponível';
+          }
+        })
+        .catch(err => {
+          console.error('Erro ao buscar música atual:', err);
+          currentSongText.textContent = '🎵 Erro ao buscar música';
+        });
+    }
+
+    // Atualiza a cada 10 segundos
+    fetchCurrentSong(); // chamada inicial
+    setInterval(fetchCurrentSong, 10000);
+
   </script>
 </body>
+
 </html>
