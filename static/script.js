@@ -70,4 +70,29 @@ document.addEventListener('DOMContentLoaded', function() {
       equalizer.classList.add('hidden');
       console.error('❌ Erro no elemento de áudio');
     });
-  });
+  
+  // Verifica se o áudio parou inesperadamente e tenta reconectar
+setInterval(() => {
+  if (isPlaying && audioPlayer.paused && !isLoading) {
+    console.warn('🔁 Tentando reconectar ao stream...');
+    isLoading = true;
+    statusText.textContent = 'Reconectando...';
+
+    audioPlayer.load();
+    audioPlayer.play().then(() => {
+      isPlaying = true;
+      isLoading = false;
+      playButton.innerHTML = '<i class="fas fa-stop"></i>';
+      playButton.classList.add('playing');
+      statusText.textContent = 'Tocando agora';
+      equalizer.classList.remove('hidden');
+      console.log('✅ Reconectado ao stream!');
+    }).catch(error => {
+      console.error('❌ Falha ao reconectar:', error);
+      statusText.textContent = 'Erro ao reconectar';
+      isPlaying = false;
+      isLoading = false;
+    });
+  }
+}, 5000); // verifica a cada 5 segundos
+});
